@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: APT-Gateway
+
+server:
+  port: 8244
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+  cloud:
+    gateway:
+      routes:
+        - id: PRICING-SERVICE
+          uri: lb://PRICING-SERVICE
+          predicates:
+            - Path=/price/**
+#          filters:
+#            - RewritePath=/price/(?<segment>.*), /$\{segment}
+
+        - id: OFFER-SERVICE
+          uri: lb://OFFER-SERVICE
+          predicates:
+            - Path=/offers/**
+#          filters:
+#            - RewritePath=/offers/(?<segment>.*), /$\{segment}
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
